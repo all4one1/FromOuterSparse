@@ -35,8 +35,9 @@ struct SparseMatrix
 private:
 	void add_one_next(double v, int i, int t = -1);
 	void insert_one(int place_in_vector, int matrix_row, double value, int column, int t = -1);
+	void erase_one(int place_in_vector, int matrix_row);
 	void endline(int l);
-	void resize(int n_);
+
 
 public:
 	void make_sparse_2d_laplace(int nx, int ny, double a = 1);
@@ -52,8 +53,10 @@ public:
 
 
 	void update(int ii, int jj, double value);
+	void resize(int n_);
 
 	double& operator()(int ii, int jj);
+
 	struct Bracket
 	{
 		SparseMatrix& root;

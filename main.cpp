@@ -10,7 +10,7 @@ int main()
 {
 	//Let us make a test
 
-	SparseMatrix SM;
+	SparseMatrix SM(6);
 	double A[6][6] =
 	{
 		{ 30,3,4,0,0,0 },
@@ -42,11 +42,15 @@ int main()
 	E[1][1] = 0.0;
 
 
+
 	SM.make_sparse_from_double_array(6, E);
+
+
+	double d = SM[4][3];
+	cout << d << endl;
+
+
 	SM.print_all();
-
-
-
 	cout << "End" << endl;
 	return 0;
 }

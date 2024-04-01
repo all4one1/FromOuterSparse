@@ -51,6 +51,19 @@ void SparseMatrix::insert_one(int place_in_vector, int matrix_row,
 	nval++;
 }
 
+void SparseMatrix::erase_one(int place_in_vector, int matrix_row)
+{
+	val.erase(val.begin() + place_in_vector);
+	col.erase(col.begin() + place_in_vector);
+	type.erase(type.begin() + place_in_vector);
+	for (unsigned int i = matrix_row + 1; i < raw.size(); i++)
+	{
+		raw[i]--;
+	}
+	nval--;
+}
+
+
 
 void SparseMatrix::endline(int l)
 {
