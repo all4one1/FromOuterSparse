@@ -63,7 +63,14 @@ void SparseMatrix::erase_one(int place_in_vector, int matrix_row)
 	nval--;
 }
 
-
+void SparseMatrix::add_line_with_map(std::map<int, double> elements, int current_line)
+{
+	for (auto it = elements.begin(); it != elements.end(); ++it)
+	{
+		add_one_next(it->second, it->first);
+	}
+	endline(current_line);
+}
 
 void SparseMatrix::endline(int l)
 {

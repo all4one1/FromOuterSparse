@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-
+#include <map>
 // #define DEBUG
 
 // format of storage:
@@ -36,6 +36,7 @@ struct SparseMatrix
 	void add_one_next(double v, int i, int t = -1);
 	void insert_one(int place_in_vector, int matrix_row, double value, int column, int t = -1);
 	void erase_one(int place_in_vector, int matrix_row);
+	void add_line_with_map(std::map<int, double> elements, int current_line);
 	void endline(int l);
 
 
