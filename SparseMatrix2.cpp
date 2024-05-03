@@ -16,7 +16,7 @@ void SparseMatrix::show_storage()
 }
 
 
-void SparseMatrix::recover_full(int precision = 4)
+void SparseMatrix::recover_full(int precision)
 {
 	ofstream out("coef.dat");
 	ofstream out2("info.dat");
