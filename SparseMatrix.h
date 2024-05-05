@@ -87,6 +87,7 @@ struct SparseMatrix
 	// defined in the second *.cpp file:
 	void show_storage();
 	void recover_full(int precision = 4);
+	void recover_full_with_rhs(int precision, double* b);
 	void recover_full2();
 	void recover_type();
 	void print_all();
