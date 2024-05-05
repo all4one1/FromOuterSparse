@@ -48,6 +48,33 @@ void SparseMatrix::recover_full(int precision)
 	}
 }
 
+void SparseMatrix::recover_full_with_rhs(int precision, double *b)
+{
+	ofstream out("coef.dat");
+	out << std::fixed << std::setprecision(precision);
+	for (unsigned int k = 0; k < raw.size() - 1; k++)
+	{
+		std::vector <double> line(Nfull);
+		std::vector <int> t(Nfull);
+		for (int i = 0; i < Nfull; i++)
+		{
+			line[i] = 0.0;
+		}
+
+		for (int j = raw[k]; j < raw[k + 1]; j++)
+		{
+			line[col[j]] = val[j];
+		}
+
+		for (int i = 0; i < Nfull; i++)
+		{
+			out << line[i] << " ";
+		}
+		out << "	 " << b[k] << endl;
+		out << endl;
+	}
+}
+
 
 void SparseMatrix::recover_full2()
 {
