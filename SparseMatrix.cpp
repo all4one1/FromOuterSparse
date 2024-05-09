@@ -373,21 +373,21 @@ void SparseMatrix::save_compressed_matrix(std::string filename)
 	w << Nfull << " " << nval << " " << nraw << endl;
 
 	size_t n = val.size();
-	for (int i = 0; i < n; i++)
+	for (size_t i = 0; i < n; i++)
 	{
 		w << val[i];
 		if (i != (n - 1)) w << " ";
 		else w << endl;
 	}
 	n = col.size();
-	for (int i = 0; i < col.size(); i++)
+	for (size_t i = 0; i < col.size(); i++)
 	{
 		w << col[i];
 		if (i != (n - 1)) w << " ";
 		else w << endl;
 	}
 	n = raw.size();
-	for (int i = 0; i < raw.size(); i++)
+	for (size_t i = 0; i < raw.size(); i++)
 	{
 		w << raw[i];
 		if (i != (n - 1)) w << " ";
