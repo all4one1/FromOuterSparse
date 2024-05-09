@@ -370,3 +370,4 @@ FodyWeavers.xsd
 /FromOuterSparse.vcxproj.filters
 /FromOuterSparse.sln
 /FromOuterSparse.sln
+*.dat

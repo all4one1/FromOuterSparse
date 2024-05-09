@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <map>
+#include <string>
 // #define DEBUG
 
 // format of storage:
@@ -80,6 +81,9 @@ struct SparseMatrix
 	double line1(int q, double* y);
 	// auxiliary sum for LU solver
 	double line2(int q, double* y);
+
+
+	void save_compressed_matrix(std::string filename = "CompressedMatrix.dat");
 
 
 

@@ -43,11 +43,9 @@ int main()
 
 
 
-	SM.make_sparse_from_double_array(6, E);
+	SM.make_sparse_from_double_array(6, M);
+	SM.save_compressed_matrix();
 
-
-	double d = SM[4][3];
-	cout << d << endl;
 
 
 	SM.print_all();

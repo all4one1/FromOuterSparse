@@ -36,7 +36,7 @@ void SparseMatrix::add_one_next(double v, int i, int t)
 	type.push_back(t);
 	val.push_back(v);
 	col.push_back(i);
-	nraw++;
+	nval++;
 }
 void SparseMatrix::insert_one(int place_in_vector, int matrix_row, 	
 	double value, int column, int t)
@@ -75,7 +75,7 @@ void SparseMatrix::add_line_with_map(std::map<int, double> elements, int current
 void SparseMatrix::endline(int l)
 {
 	l++;
-	raw[l] = nraw;
+	raw[l] = nval;
 }
 
 void SparseMatrix::resize(int n_)
@@ -93,6 +93,7 @@ void SparseMatrix::resize(int n_)
 	*this = SparseMatrix();
 	Nfull = n_;
 	raw.resize(Nfull + 1);
+	nraw = raw.size();
 	raw[0] = 0;
 }
 
@@ -350,7 +351,6 @@ double SparseMatrix::line2(int q, double* y)
 }
 
 
-
 double SparseMatrix::max_element_abs()
 {
 	double max = 0;
@@ -363,4 +363,35 @@ double SparseMatrix::max_element_abs()
 	}
 
 	return max;
+}
+
+
+void SparseMatrix::save_compressed_matrix(std::string filename)
+{
+	std::ofstream w(filename);
+	cout << "nraw = " << raw.size() << endl;
+	cout << "nval = " << val.size() << endl;
+	w << Nfull << " " << nval << " " << nraw << endl;
+
+	size_t n = val.size();
+	for (int i = 0; i < n; i++)
+	{
+		w << val[i];
+		if (i != (n - 1)) w << " ";
+		else w << endl;
+	}
+	n = col.size();
+	for (int i = 0; i < col.size(); i++)
+	{
+		w << col[i];
+		if (i != (n - 1)) w << " ";
+		else w << endl;
+	}
+	n = raw.size();
+	for (int i = 0; i < raw.size(); i++)
+	{
+		w << raw[i];
+		if (i != (n - 1)) w << " ";
+		else w << endl;
+	}
 }
