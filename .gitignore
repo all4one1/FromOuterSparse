@@ -371,3 +371,4 @@ FodyWeavers.xsd
 /FromOuterSparse.sln
 /FromOuterSparse.sln
 *.dat
+/main.cpp

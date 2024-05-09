@@ -42,13 +42,14 @@ int main()
 	E[1][1] = 0.0;
 
 
+	double* b = new double[6];
+	//for (int i = 0; i < 6; i++)		b[i] = 0.1 * i;
+	//SM.make_sparse_from_double_array(6, M);
+	//SM.recover_full_with_rhs(5, b);
+	SM.read_full_matrix_with_rhs(6, b);
 
-	SM.make_sparse_from_double_array(6, M);
-	SM.save_compressed_matrix();
-
-
-
-	SM.print_all();
+	SM.print_all();	
+	
 	cout << "End" << endl;
 	return 0;
 }

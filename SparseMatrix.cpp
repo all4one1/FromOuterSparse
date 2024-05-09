@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <sstream> 
 using std::cout;
 using std::endl;
 using std::ofstream;
@@ -93,7 +94,7 @@ void SparseMatrix::resize(int n_)
 	*this = SparseMatrix();
 	Nfull = n_;
 	raw.resize(Nfull + 1);
-	nraw = raw.size();
+	nraw = (int)raw.size();
 	raw[0] = 0;
 }
 
@@ -369,8 +370,6 @@ double SparseMatrix::max_element_abs()
 void SparseMatrix::save_compressed_matrix(std::string filename)
 {
 	std::ofstream w(filename);
-	cout << "nraw = " << raw.size() << endl;
-	cout << "nval = " << val.size() << endl;
 	w << Nfull << " " << nval << " " << nraw << endl;
 
 	size_t n = val.size();
@@ -394,4 +393,129 @@ void SparseMatrix::save_compressed_matrix(std::string filename)
 		if (i != (n - 1)) w << " ";
 		else w << endl;
 	}
+}
+void SparseMatrix::save_compressed_matrix_with_rhs(double* b, std::string filename)
+{
+	save_compressed_matrix(filename);
+	std::ofstream w(filename, std::ios_base::app);
+	for (int i = 0; i < Nfull; i++)
+	{
+		w << b[i];
+		if (i != (Nfull - 1)) w << " ";
+		else w << endl;
+	}
+}
+
+
+
+void SparseMatrix::read_compressed_matrix(std::string filename)
+{
+	std::ifstream read(filename);
+	//std::istringstream iss;
+	if (!read.good())
+	{
+		cout << "Error: no such a file '" << filename << "'" << endl;
+		return;
+	}
+	else
+	{
+		//std::ostringstream oss;
+		//oss << read.rdbuf();
+		//iss.str(oss.str());
+	}
+	std::string line;
+	//std::string symbol;
+	double f;
+	int i;
+	//getline(iss, line);
+	getline(read, line);
+	std::stringstream ss;
+	ss << line;
+	ss >> Nfull; ss >> nval; ss >> nraw;
+
+	resize(Nfull);
+
+	//values
+	getline(read, line);
+	ss.clear();
+	ss << line;
+	while (ss >> f) 
+		val.push_back(f);
+		
+	//columns
+	getline(read, line);
+	ss.clear();
+	ss << line;
+	while (ss >> i)
+		col.push_back(i);
+
+	//raws
+	getline(read, line);
+	ss.clear();
+	ss << line;
+	//because nraw is already allocated
+	for (int r = 0; r < nraw; r++) 
+	{
+		ss >> i;
+		raw[r] = i;
+	}
+}
+
+void SparseMatrix::read_compressed_matrix_with_rhs(double* b, std::string filename)
+{
+	read_compressed_matrix(filename);
+
+	std::ifstream read(filename);
+	std::string line;
+
+	getline(read, line); 
+	getline(read, line); 
+	getline(read, line); 
+	getline(read, line);
+	getline(read, line);
+
+	std::stringstream ss;
+	ss << line;
+
+	for (int i = 0; i < Nfull; i++)
+	{
+		ss >> b[i];
+	}
+}
+
+void SparseMatrix::read_full_matrix_with_rhs(int N, double* b, std::string filename)
+{
+	Nfull = N;
+	resize(Nfull);
+	std::ifstream read(filename);
+	if (!read.good())
+	{
+		cout << "Error: no such a file '" << filename << "'" << endl;
+		return;
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		std::string line;
+		std::stringstream ss;
+		getline(read, line);
+		ss << line;
+		double f = 0.0;
+		std::map<int, double> m;
+		for (int j = 0; j < N; j++)
+		{
+			ss >> f;
+			if (f != 0.0)
+			{
+				m[j] = f;
+			}
+		} 
+		add_line_with_map(m, i);
+		if (b != nullptr)
+		{
+			ss >> b[i];
+		}
+	}
+
+
 }

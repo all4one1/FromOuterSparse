@@ -29,6 +29,7 @@ struct SparseMatrix
 	std::vector <double> diag;
 	std::vector <int> type;
 
+
 	SparseMatrix();
 	SparseMatrix(int n_);
 	~SparseMatrix();
@@ -82,11 +83,13 @@ struct SparseMatrix
 	// auxiliary sum for LU solver
 	double line2(int q, double* y);
 
-
+	
 	void save_compressed_matrix(std::string filename = "CompressedMatrix.dat");
+	void save_compressed_matrix_with_rhs(double* b, std::string filename = "CompressedMatrix.dat");
+	void read_compressed_matrix(std::string filename = "CompressedMatrix.dat");
+	void read_compressed_matrix_with_rhs(double* b, std::string filename = "CompressedMatrix.dat");
 
-
-
+	void read_full_matrix_with_rhs(int N, double* b, std::string filename = "coef.dat");
 
 	// defined in the second *.cpp file:
 	void show_storage();
