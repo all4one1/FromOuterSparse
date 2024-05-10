@@ -34,6 +34,7 @@ SparseMatrix::~SparseMatrix()
 
 void SparseMatrix::add_one_next(double v, int i, int t)
 {
+	if (abs(v) < zero_threshold) return;
 	type.push_back(t);
 	val.push_back(v);
 	col.push_back(i);

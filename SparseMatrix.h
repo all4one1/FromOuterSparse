@@ -22,6 +22,7 @@ struct SparseMatrix
 	int Nfull = 0;	// the input (linear) size of a matrix
 	int nval = 0;	// number of non-zero elements
 	int nraw = 0;	// number of raws
+	double zero_threshold = 1e-15;
 
 	std::vector <double> val;
 	std::vector <int> col;
