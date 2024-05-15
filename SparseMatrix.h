@@ -54,7 +54,8 @@ struct SparseMatrix
 	void update_diag();
 	double max_element_abs();
 
-
+	double get_diag(int l);
+	
 	void update(int ii, int jj, double value);
 	void resize(int n_);
 

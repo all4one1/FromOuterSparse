@@ -367,6 +367,11 @@ double SparseMatrix::max_element_abs()
 	return max;
 }
 
+double SparseMatrix::get_diag(int l)
+{
+	return get_element(l,l);
+}
+
 
 void SparseMatrix::save_compressed_matrix(std::string filename)
 {
