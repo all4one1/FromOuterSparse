@@ -129,17 +129,18 @@ void SparseMatrix::save_type()
 
 void SparseMatrix::print_sequently()
 {
-	ofstream seq("seq.dat");
-	seq << nval << endl;
+	//ofstream seq("seq.dat");
+	cout << "Sequential (compressed) format: " << endl;
 	for (int i = 0; i < nval; i++)
-		seq << val[i] << " ";
-	seq << endl;
+		cout << val[i] << " ";
+	cout << endl;
 	for (int i = 0; i < nval; i++)
-		seq << col[i] << " ";
-	seq << endl;
+		cout << col[i] << " ";
+	cout << endl;
 
 	for (int i = 0; i < Nfull + 1; i++)
-		seq << raw[i] << " ";
+		cout << raw[i] << " ";
+	cout << endl;
 }
 
 void SparseMatrix::print_all()
