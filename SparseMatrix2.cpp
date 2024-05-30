@@ -16,7 +16,7 @@ void SparseMatrix::show_storage()
 }
 
 
-void SparseMatrix::recover_full(int precision)
+void SparseMatrix::save_full_matrix(int precision)
 {
 	ofstream out("coef.dat");
 	ofstream out2("info.dat");
@@ -48,7 +48,7 @@ void SparseMatrix::recover_full(int precision)
 	}
 }
 
-void SparseMatrix::recover_full_with_rhs(int precision, double *b)
+void SparseMatrix::save_full_matrix_with_rhs(int precision, double *b)
 {
 	ofstream out("coef.dat");
 	out << std::fixed << std::setprecision(precision);
@@ -76,7 +76,7 @@ void SparseMatrix::recover_full_with_rhs(int precision, double *b)
 }
 
 
-void SparseMatrix::recover_full2()
+void SparseMatrix::save_full_matrix2()
 {
 	ofstream m("matrix.dat");
 	for (int i = 0; i < Nfull; i++) {
@@ -106,7 +106,7 @@ void SparseMatrix::print_index_ij(int l)
 	cout << "[" << i << "][" << j << "]" << endl;
 }
 
-void SparseMatrix::recover_type()
+void SparseMatrix::save_type()
 {
 	ofstream m("type.dat");
 
