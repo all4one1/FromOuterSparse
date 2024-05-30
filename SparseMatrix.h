@@ -59,6 +59,8 @@ struct SparseMatrix
 	void update(int ii, int jj, double value);
 	void resize(int n_);
 
+	void reset();
+
 	double& operator()(int ii, int jj);
 
 	struct Bracket

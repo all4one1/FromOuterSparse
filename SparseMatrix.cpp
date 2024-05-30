@@ -98,6 +98,12 @@ void SparseMatrix::resize(int n_)
 	nraw = (int)raw.size();
 	raw[0] = 0;
 }
+void SparseMatrix::reset()
+{
+	resize(Nfull);
+}
+
+
 
 void SparseMatrix::make_sparse_2d_laplace(int nx, int ny, double a)
 {
