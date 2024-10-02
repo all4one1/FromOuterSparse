@@ -13,7 +13,7 @@ using std::ofstream;
 
 SparseMatrix::SparseMatrix()
 {
-	raw.push_back(0);
+	row.push_back(0);
 #ifdef DEBUG
 	printf("SparseMatrix constructor \n");
 #endif // DEBUG
@@ -46,9 +46,9 @@ void SparseMatrix::insert_one(int place_in_vector, int matrix_row,
 	val.insert(val.begin() + place_in_vector, value);
 	col.insert(col.begin() + place_in_vector, column);
 	type.insert(type.begin() + place_in_vector, t);
-	for (unsigned int i = matrix_row + 1; i < raw.size(); i++)
+	for (unsigned int i = matrix_row + 1; i < row.size(); i++)
 	{
-		raw[i]++;
+		row[i]++;
 	}
 	nval++;
 }
@@ -58,9 +58,9 @@ void SparseMatrix::erase_one(int place_in_vector, int matrix_row)
 	val.erase(val.begin() + place_in_vector);
 	col.erase(col.begin() + place_in_vector);
 	type.erase(type.begin() + place_in_vector);
-	for (unsigned int i = matrix_row + 1; i < raw.size(); i++)
+	for (unsigned int i = matrix_row + 1; i < row.size(); i++)
 	{
-		raw[i]--;
+		row[i]--;
 	}
 	nval--;
 }
@@ -77,7 +77,7 @@ void SparseMatrix::add_line_with_map(std::map<int, double> elements, int current
 void SparseMatrix::endline(int l)
 {
 	l++;
-	raw[l] = nval;
+	row[l] = nval;
 }
 
 void SparseMatrix::resize(int n_)
@@ -85,18 +85,18 @@ void SparseMatrix::resize(int n_)
 	//Nfull = n_;
 	//val.clear(); 	
 	//col.clear(); 
-	//raw.clear();	
+	//row.clear();	
 	//diag.clear();
-	//raw.resize(Nfull + 1);
-	//raw[0] = 0;
-	//nraw = 0;
+	//row.resize(Nfull + 1);
+	//row[0] = 0;
+	//nrow = 0;
 	//update_diag();
 
 	*this = SparseMatrix();
 	Nfull = n_;
-	raw.resize(Nfull + 1);
-	nraw = (int)raw.size();
-	raw[0] = 0;
+	row.resize(Nfull + 1);
+	nrow = (int)row.size();
+	row[0] = 0;
 }
 void SparseMatrix::reset()
 {
@@ -110,8 +110,8 @@ void SparseMatrix::make_sparse_2d_laplace(int nx, int ny, double a)
 	int l = -1;
 	int off = nx;
 	Nfull = nx * ny;
-	raw.resize(Nfull + 1);
-	raw[0] = 0;
+	row.resize(Nfull + 1);
+	row[0] = 0;
 	double ap, ae, aw, an, as;
 	ap = 1 + 4 * a;
 	ae = -a;
@@ -173,12 +173,29 @@ void SparseMatrix::make_sparse_from_double_array(int n_, double** M)
 	nval = (int)val.size();
 }
 
+void SparseMatrix::make_sparse_from_2d_vector(std::vector<std::vector<double>> M)
+{
+	Nfull = (int)M.size();
+	resize(Nfull);
+	for (int i = 0; i < Nfull; i++) {
+		for (int j = 0; j < Nfull; j++)
+		{
+			if (M[i][j] != 0)
+			{
+				add_one_next(M[i][j], j);
+			}
+		}
+		endline(i);
+	}
+	nval = (int)val.size();
+}
+
 
 
 double SparseMatrix::get_element(int ii, int jj)
 {
 	double v = 0;
-	for (int j = raw[ii]; j < raw[ii + 1]; j++)
+	for (int j = row[ii]; j < row[ii + 1]; j++)
 	{
 		if (col[j] == jj) v = val[j];
 	}
@@ -188,7 +205,7 @@ double SparseMatrix::get_element(int ii, int jj)
 int SparseMatrix::get_index(int ii, int jj)
 {
 	int id = -1;
-	for (int j = raw[ii]; j < raw[ii + 1]; j++)
+	for (int j = row[ii]; j < row[ii + 1]; j++)
 	{
 		if (col[j] == jj) id = j;
 	}
@@ -197,7 +214,7 @@ int SparseMatrix::get_index(int ii, int jj)
 void SparseMatrix::set_type(int ii, int jj, int t)
 {
 	int id = -1;
-	for (int j = raw[ii]; j < raw[ii + 1]; j++)
+	for (int j = row[ii]; j < row[ii + 1]; j++)
 	{
 		if (col[j] == jj) id = j;
 	}
@@ -206,7 +223,7 @@ void SparseMatrix::set_type(int ii, int jj, int t)
 int SparseMatrix::get_type(int ii, int jj)
 {
 	int t = -1;
-	for (int j = raw[ii]; j < raw[ii + 1]; j++)
+	for (int j = row[ii]; j < row[ii + 1]; j++)
 	{
 		if (col[j] == jj) t = type[j];
 	}
@@ -225,7 +242,7 @@ void SparseMatrix::update_diag()
 
 void SparseMatrix::update(int ii, int jj, double value)
 {
-	for (int j = raw[ii]; j < raw[ii + 1]; j++)
+	for (int j = row[ii]; j < row[ii + 1]; j++)
 	{
 		if (col[j] == jj)
 		{
@@ -248,8 +265,8 @@ double& SparseMatrix::operator()(int ii, int jj)
 		return *v;
 	}
 
-	int l1 = raw[ii];
-	int l2 = raw[ii + 1];
+	int l1 = row[ii];
+	int l2 = row[ii + 1];
 
 	#ifdef DEBUG
 		cout << "l1 = " << l1 << ", l2 = " << l2 << endl;
@@ -287,7 +304,7 @@ double& SparseMatrix::operator()(int ii, int jj)
 
 
 	//inside existing
-	for (int j = raw[ii]; j < raw[ii + 1]; j++)
+	for (int j = row[ii]; j < row[ii + 1]; j++)
 	{
 		if (col[j] == jj)
 		{
@@ -300,7 +317,7 @@ double& SparseMatrix::operator()(int ii, int jj)
 
 
 	//inside non-existing
-	for (int j = raw[ii]; j < raw[ii + 1]; j++)
+	for (int j = row[ii]; j < row[ii + 1]; j++)
 	{
 		if (jj > col[j] && jj < col[j + 1])
 		{
@@ -327,7 +344,7 @@ double SparseMatrix::line(int q, double* y)
 {
 	double s = 0.0;
 
-	for (int j = raw[q]; j < raw[q + 1]; j++)
+	for (int j = row[q]; j < row[q + 1]; j++)
 	{
 		s += val[j] * y[col[j]];
 	}
@@ -337,7 +354,7 @@ double SparseMatrix::line(int q, double* y)
 double SparseMatrix::line1(int q, double* y)
 {
 	double s = 0.0;
-	for (int j = raw[q]; j < raw[q + 1]; j++)
+	for (int j = row[q]; j < row[q + 1]; j++)
 	{
 		if (col[j] >= q) break;
 		s += val[j] * y[col[j]];
@@ -348,8 +365,8 @@ double SparseMatrix::line1(int q, double* y)
 double SparseMatrix::line2(int q, double* y)
 {
 	double s = 0.0;
-	for (int j = raw[q]; j < raw[q + 1]; j++)
-		//for (int j = raw[q + 1] - 1; j <= raw[q]; j--)
+	for (int j = row[q]; j < row[q + 1]; j++)
+		//for (int j = row[q + 1] - 1; j <= row[q]; j--)
 	{
 		if (col[j] >= q + 1) {
 			s += val[j] * y[col[j]];
@@ -382,7 +399,7 @@ double SparseMatrix::get_diag(int l)
 void SparseMatrix::save_compressed_matrix(std::string filename)
 {
 	std::ofstream w(filename);
-	w << Nfull << " " << nval << " " << nraw << endl;
+	w << Nfull << " " << nval << " " << nrow << endl;
 
 	size_t n = val.size();
 	for (size_t i = 0; i < n; i++)
@@ -398,10 +415,10 @@ void SparseMatrix::save_compressed_matrix(std::string filename)
 		if (i != (n - 1)) w << " ";
 		else w << endl;
 	}
-	n = raw.size();
-	for (size_t i = 0; i < raw.size(); i++)
+	n = row.size();
+	for (size_t i = 0; i < row.size(); i++)
 	{
-		w << raw[i];
+		w << row[i];
 		if (i != (n - 1)) w << " ";
 		else w << endl;
 	}
@@ -443,7 +460,7 @@ void SparseMatrix::read_compressed_matrix(std::string filename)
 	getline(read, line);
 	std::stringstream ss;
 	ss << line;
-	ss >> Nfull; ss >> nval; ss >> nraw;
+	ss >> Nfull; ss >> nval; ss >> nrow;
 
 	resize(Nfull);
 
@@ -461,15 +478,15 @@ void SparseMatrix::read_compressed_matrix(std::string filename)
 	while (ss >> i)
 		col.push_back(i);
 
-	//raws
+	//rows
 	getline(read, line);
 	ss.clear();
 	ss << line;
-	//because nraw is already allocated
-	for (int r = 0; r < nraw; r++) 
+	//because nrow is already allocated
+	for (int r = 0; r < nrow; r++) 
 	{
 		ss >> i;
-		raw[r] = i;
+		row[r] = i;
 	}
 }
 

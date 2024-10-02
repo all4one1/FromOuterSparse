@@ -10,7 +10,7 @@ using std::ofstream;
 
 void SparseMatrix::show_storage()
 {
-	double S = double(val.capacity() * 8 + col.capacity() * 4 + raw.capacity() * 4 + diag.capacity() * 8 + type.capacity() * 4);
+	double S = double(val.capacity() * 8 + col.capacity() * 4 + row.capacity() * 4 + diag.capacity() * 8 + type.capacity() * 4);
 	int num = int(val.capacity());
 	cout << num << " elements, " << S / 1024 / 1024 << " MB approx. matrix memory usage" << " \n\n";
 }
@@ -21,7 +21,7 @@ void SparseMatrix::save_full_matrix(int precision)
 	ofstream out("coef.dat");
 	ofstream out2("info.dat");
 	out << std::fixed << std::setprecision(precision);
-	for (unsigned int k = 0; k < raw.size() - 1; k++)
+	for (unsigned int k = 0; k < row.size() - 1; k++)
 	{
 		std::vector <double> line(Nfull);
 		std::vector <int> t(Nfull);
@@ -31,7 +31,7 @@ void SparseMatrix::save_full_matrix(int precision)
 			//	t[i] = -1;
 		}
 
-		for (int j = raw[k]; j < raw[k + 1]; j++)
+		for (int j = row[k]; j < row[k + 1]; j++)
 		{
 			line[col[j]] = val[j];
 			//	t[col[j]] = type[j];
@@ -52,7 +52,7 @@ void SparseMatrix::save_full_matrix_with_rhs(int precision, double *b)
 {
 	ofstream out("coef.dat");
 	out << std::fixed << std::setprecision(precision);
-	for (unsigned int k = 0; k < raw.size() - 1; k++)
+	for (unsigned int k = 0; k < row.size() - 1; k++)
 	{
 		std::vector <double> line(Nfull);
 		std::vector <int> t(Nfull);
@@ -61,7 +61,7 @@ void SparseMatrix::save_full_matrix_with_rhs(int precision, double *b)
 			line[i] = 0.0;
 		}
 
-		for (int j = raw[k]; j < raw[k + 1]; j++)
+		for (int j = row[k]; j < row[k + 1]; j++)
 		{
 			line[col[j]] = val[j];
 		}
@@ -96,7 +96,7 @@ void SparseMatrix::print_index_ij(int l)
 	int i;
 	for (int q = 0; q < Nfull; q++)
 	{
-		if (l < raw[q + 1])
+		if (l < row[q + 1])
 		{
 			i = q;
 			break;
@@ -139,7 +139,7 @@ void SparseMatrix::print_sequently()
 	cout << endl;
 
 	for (int i = 0; i < Nfull + 1; i++)
-		cout << raw[i] << " ";
+		cout << row[i] << " ";
 	cout << endl;
 }
 

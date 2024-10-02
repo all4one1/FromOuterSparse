@@ -21,12 +21,12 @@ struct SparseMatrix
 
 	int Nfull = 0;	// the input (linear) size of a matrix
 	int nval = 0;	// number of non-zero elements
-	int nraw = 0;	// number of raws
+	int nrow = 0;	// number of raws
 	double zero_threshold = 1e-15;
 
 	std::vector <double> val;
 	std::vector <int> col;
-	std::vector <int> raw;
+	std::vector <int> row;
 	std::vector <double> diag;
 	std::vector <int> type;
 
@@ -45,7 +45,7 @@ struct SparseMatrix
 
 	void make_sparse_2d_laplace(int nx, int ny, double a = 1);
 	void make_sparse_from_double_array(int n_, double** M);
-
+	void make_sparse_from_2d_vector(std::vector<std::vector<double>> M);
 	double get_element(int ii, int jj);
 	int get_index(int ii, int jj);
 	int get_type(int ii, int jj);
@@ -61,6 +61,11 @@ struct SparseMatrix
 
 	void reset();
 
+	SparseMatrix& operator=(std::vector<std::vector<double>> SM)
+	{
+		this->make_sparse_from_2d_vector(SM);
+		return *this;
+	};
 	double& operator()(int ii, int jj);
 
 	struct Bracket
