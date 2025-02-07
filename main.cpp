@@ -1,10 +1,11 @@
-#include "SparseMatrix.h"
+#include "FromOuterSparse/SparseMatrix.h"
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
-
+#include <vector>
 using std::cout;
 using std::endl;
+
 
 using Matrix = std::vector<std::vector<double>>;
 
