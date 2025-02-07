@@ -6,44 +6,38 @@
 using std::cout;
 using std::endl;
 
+using Matrix = std::vector<std::vector<double>>;
+
 int main()
 {
-	//Let us make a test
-	SparseMatrix SM(6);
-	double A[6][6] =
-	{
-		{ 30,3,4,0,0,0 },
-		{ 4,22,1,3,0,0 },
-		{ 5,7,33,6,7,0 },
-		{ 0,1,2,42,3,3 },
-		{ 0,0,2,11,52,2 },
-		{ 0,0,0,3,9,26 },
-	};
+	Matrix example =
+	{ { 30,3,4,0,0,0 },
+	 { 4,22,1,3,0,0 },
+	 { 5,7,33,6,7,0 },
+	 { 0,1,2,42,3,3 },
+	 { 0,0,2,11,52,2 },
+	 { 0,0,0,3,9,26 } };
 
-	double** M = new double* [6];
-	for (int i = 0; i < 6; i++)
-	{
-		M[i] = new double[6]; 
-	}
+	SparseMatrix SM;
+	SM = example;
 
-	for (int i = 0; i < 6; i++)
-	{
-		for (int j = 0; j < 6; j++)
-		{
-			M[i][j] = A[i][j]; 
-		}
-	}
-
-	SM.make_sparse_from_double_array(6, M);
-	SM.print_full_matrix();
 	SM.print_compressed_matrix();
 
-	//access an element
+	//output:
+	//30 3 4 4 22 1 3 5 7 33 6 7 1 2 42 3 3 2 11 52 2 3 9 26
+	//0 1 2 0 1 2 3 0 1 2 3 4 1 2 3 4 5 2 3 4 5 3 4 5
+	//0 3 7 12 17 21 24
+
+	//access an element SM[1][1] = 22
 	cout << SM[1][1] << endl; // lvalue, produce 0 if doesn't exists
 	cout << SM(1, 1) << endl; // lvalue, produce 0 if doesn't exists
 	cout << SM.get_element(1, 1) << endl; // rvalue, save access
 
-	cout << "End" << endl;
+
+	//save or recover a sparse matrix
+	SM.save_compressed_matrix();
+	SM.read_compressed_matrix();
+
 
 	return 0;
 }
