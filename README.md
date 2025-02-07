@@ -1,4 +1,4 @@
-My own implementation of Compressed sparse row format for sparse matrix storage: https://en.wikipedia.org/wiki/Sparse_matrix
+My own implementation of the compressed sparse row format for the sparse matrix storage: https://en.wikipedia.org/wiki/Sparse_matrix
 
 
 ## Clone 
