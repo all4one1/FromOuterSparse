@@ -1,4 +1,4 @@
-#include "FromOuterSparse/SparseMatrix.h"
+#include "SparseMatrix.h"
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -30,8 +30,8 @@ int main()
 	//0 3 7 12 17 21 24
 
 	//access an element SM[1][1] = 22
-	cout << SM[1][1] << endl; // lvalue, produce 0 if doesn't exists
-	cout << SM(1, 1) << endl; // lvalue, produce 0 if doesn't exists
+	cout << SM[1][1] << endl; // lvalue, produces 0 if doesn't exist
+	cout << SM(1, 1) << endl; // lvalue, produces 0 if doesn't exist
 	cout << SM.get_element(1, 1) << endl; // rvalue, save access
 
 
