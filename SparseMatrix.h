@@ -68,6 +68,7 @@ struct SparseMatrix
 	};
 	double& operator()(int ii, int jj);
 
+	// implementaion of [][] operator
 	struct Bracket
 	{
 		SparseMatrix& root;
@@ -92,30 +93,22 @@ struct SparseMatrix
 	// auxiliary sum for LU solver
 	double line2(int q, double* y);
 
-	
+
+	// IO defined in the second *.cpp file:
 	void save_compressed_matrix(std::string filename = "CompressedMatrix.dat");
 	void save_compressed_matrix_with_rhs(double* b, std::string filename = "CompressedMatrix.dat");
 	void read_compressed_matrix(std::string filename = "CompressedMatrix.dat");
 	void read_compressed_matrix_with_rhs(double* b, std::string filename = "CompressedMatrix.dat");
 
-	void read_full_matrix_with_rhs(int N, double* b, std::string filename = "coef.dat");
+	void save_full_matrix(int precision = 4, std::string filename = "FullMatrix.dat");
+	void save_full_matrix_v2(int precision = 4, std::string filename = "FullMatrix.dat");
+	void save_full_matrix_with_rhs(int precision, double* b, std::string filename = "FullMatrix.dat");
+	void read_full_matrix_with_rhs(int N, double* b, std::string filename = "FullMatrix.dat");
 
-	// defined in the second *.cpp file:
-	void show_storage();
-	void save_full_matrix(int precision = 4);
-	void save_full_matrix_with_rhs(int precision, double* b);
-	void save_full_matrix2();
+	void print_storage();
 	void save_type();
-	void print_all();
 	void print_index_ij(int l);
-	void print_sequently();
-
-
-	//implemented in some projects, but it was not effective
-	double conditionNumber();
-	double conditionNumber2();
-
-
-
+	void print_compressed_matrix();
+	void print_full_matrix();
 
 };
