@@ -35,8 +35,8 @@ int main()
 	}
 
 	SM.make_sparse_from_double_array(6, M);
-	SM.print_all();	
-	SM.print_sequently();
+	SM.print_full_matrix();
+	SM.print_compressed_matrix();
 
 	//access an element
 	cout << SM[1][1] << endl; // lvalue, produce 0 if doesn't exists
