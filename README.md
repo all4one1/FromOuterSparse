@@ -8,7 +8,7 @@ git clone https://github.com/all4one1/FromOuterSparse.git
 
 ## Example usage 
 
-```
+```cpp
 #include "FromOuterSparse/SparseMatrix.h"
 #include <iostream>
 #include <fstream>
