@@ -97,8 +97,10 @@ struct SparseMatrix
 	// IO defined in the second *.cpp file:
 	void save_compressed_matrix(std::string filename = "CompressedMatrix.dat");
 	void save_compressed_matrix_with_rhs(double* b, std::string filename = "CompressedMatrix.dat");
+	void save_compressed_matrix_binary(std::string filename = "CompressedMatrix.bin");
 	void read_compressed_matrix(std::string filename = "CompressedMatrix.dat");
 	void read_compressed_matrix_with_rhs(double* b, std::string filename = "CompressedMatrix.dat");
+	void read_compressed_matrix_binary(std::string filename = "CompressedMatrix.bin");
 
 	void save_full_matrix(int precision = 4, std::string filename = "FullMatrix.dat");
 	void save_full_matrix_v2(int precision = 4, std::string filename = "FullMatrix.dat");

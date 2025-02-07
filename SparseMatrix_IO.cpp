@@ -49,6 +49,17 @@ void SparseMatrix::save_compressed_matrix_with_rhs(double* b, std::string filena
 		else w << endl;
 	}
 }
+void SparseMatrix::save_compressed_matrix_binary(std::string filename)
+{
+	std::ofstream w(filename, std::ios_base::app);
+	w.write(reinterpret_cast<const char*>(&Nfull), sizeof(int));
+	w.write(reinterpret_cast<const char*>(&nval), sizeof(int));
+	w.write(reinterpret_cast<const char*>(&nrow), sizeof(int));
+
+	w.write(reinterpret_cast<const char*>(val.data()), sizeof(double) * nval);
+	w.write(reinterpret_cast<const char*>(col.data()), sizeof(int) * nval);
+	w.write(reinterpret_cast<const char*>(row.data()), sizeof(int) * nrow);
+}
 void SparseMatrix::read_compressed_matrix(std::string filename)
 {
 	std::ifstream read(filename);
@@ -121,6 +132,22 @@ void SparseMatrix::read_compressed_matrix_with_rhs(double* b, std::string filena
 	{
 		ss >> b[i];
 	}
+}
+void SparseMatrix::read_compressed_matrix_binary(std::string filename)
+{
+	std::ifstream r(filename, std::ios::binary);
+	r.read(reinterpret_cast<char*>(&Nfull), sizeof(int));
+	resize(Nfull);
+
+	r.read(reinterpret_cast<char*>(&nval), sizeof(int));
+	r.read(reinterpret_cast<char*>(&nrow), sizeof(int));
+
+	val.resize(nval);
+	col.resize(nval);
+
+	r.read(reinterpret_cast<char*>(val.data()), sizeof(double) * nval);
+	r.read(reinterpret_cast<char*>(col.data()), sizeof(int) * nval);
+	r.read(reinterpret_cast<char*>(row.data()), sizeof(int) * nrow);
 }
 
 
