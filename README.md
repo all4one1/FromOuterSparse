@@ -41,8 +41,8 @@ int main()
 	//0 3 7 12 17 21 24
 
 	//access an element SM[1][1] = 22
-	cout << SM[1][1] << endl; // lvalue, produce 0 if doesn't exist
-	cout << SM(1, 1) << endl; // lvalue, produce 0 if doesn't exist
+	cout << SM[1][1] << endl; // lvalue, produces 0 if doesn't exist
+	cout << SM(1, 1) << endl; // lvalue, produces 0 if doesn't exist
 	cout << SM.get_element(1, 1) << endl; // rvalue, save access
 
 
