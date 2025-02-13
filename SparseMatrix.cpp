@@ -179,6 +179,38 @@ void SparseMatrix::make_sparse_from_2d_vector(std::vector<std::vector<double>> M
 	nval = (int)val.size();
 }
 
+void SparseMatrix::make_sparse_from_joint(std::vector<SparseMatrix*> v)
+{
+	int N = 0, n = 0;
+	for (auto M : v) {
+		N += M->Nfull;
+		n += M->nval;
+	}
+	resize(N);
+
+	val.resize(n);
+	col.resize(n);
+	nval = n;
+
+	int stride_val = 0;
+	int stride_N = 0;
+	for (auto M : v)
+	{
+		for (int i = 0; i < M->nval; i++)
+		{
+			val[i + stride_val] = M->val[i];
+			col[i + stride_val] = M->col[i] + stride_N;
+		}
+
+		for (int i = 0; i < M->Nfull; i++)
+		{
+			row[1 + stride_N + i] = M->row[i + 1] + stride_val;
+		}
+		stride_val += M->nval;
+		stride_N += M->Nfull;
+	}
+}
+
 
 
 double SparseMatrix::get_element(int ii, int jj)

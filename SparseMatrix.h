@@ -47,6 +47,8 @@ struct SparseMatrix
 	void make_sparse_2d_laplace(int nx, int ny, double a = 1);
 	void make_sparse_from_double_array(int n_, double** M);
 	void make_sparse_from_2d_vector(std::vector<std::vector<double>> M);
+	void make_sparse_from_joint(std::vector<SparseMatrix*> v);
+
 	double get_element(int ii, int jj);
 	int get_index(int ii, int jj);
 	int get_type(int ii, int jj);
@@ -114,8 +116,5 @@ struct SparseMatrix
 	void print_index_ij(int l);
 	void print_compressed_matrix();
 	void print_full_matrix();
-
-
-
 
 };
