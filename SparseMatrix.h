@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <iostream>
 // #define DEBUG
 
 // format of storage:
@@ -50,6 +51,7 @@ struct SparseMatrix
 	int get_index(int ii, int jj);
 	int get_type(int ii, int jj);
 	void set_type(int ii, int jj, int t);
+	int get_row_by_index(int l);
 
 	void update_diag();
 	double max_element_abs();
@@ -82,7 +84,7 @@ struct SparseMatrix
 	}
 
 
-	//TODO: erase zeros after some manipulations (like a decomposition technique)
+	//might be slow
 	void erase_zeros();
 
 	// return S = sum_j (Aij*yj), i.e. sum up all elements in a line (row)
@@ -112,5 +114,8 @@ struct SparseMatrix
 	void print_index_ij(int l);
 	void print_compressed_matrix();
 	void print_full_matrix();
+
+
+
 
 };

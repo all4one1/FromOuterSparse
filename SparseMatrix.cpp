@@ -53,17 +53,6 @@ void SparseMatrix::insert_one(int place_in_vector, int matrix_row,
 	nval++;
 }
 
-void SparseMatrix::erase_one(int place_in_vector, int matrix_row)
-{
-	val.erase(val.begin() + place_in_vector);
-	col.erase(col.begin() + place_in_vector);
-	type.erase(type.begin() + place_in_vector);
-	for (unsigned int i = matrix_row + 1; i < row.size(); i++)
-	{
-		row[i]--;
-	}
-	nval--;
-}
 
 void SparseMatrix::add_line_with_map(std::map<int, double> elements, int current_line)
 {
@@ -202,6 +191,15 @@ double SparseMatrix::get_element(int ii, int jj)
 	return v;
 }
 
+int SparseMatrix::get_row_by_index(int l)
+{
+	for (int i = 0; i < nrow - 1; i++)
+	{
+		if (l >= row[i] && l < row[i + 1])
+			return i;
+	}
+	return -1;
+}
 int SparseMatrix::get_index(int ii, int jj)
 {
 	int id = -1;
@@ -335,9 +333,28 @@ double& SparseMatrix::operator()(int ii, int jj)
 }
 
 
+void SparseMatrix::erase_one(int place_in_vector, int matrix_row)
+{
+	val.erase(val.begin() + place_in_vector);
+	col.erase(col.begin() + place_in_vector);
+	type.erase(type.begin() + place_in_vector);
+	for (unsigned int i = matrix_row + 1; i < row.size(); i++)
+	{
+		row[i]--;
+	}
+	nval--;
+}
+
 void SparseMatrix::erase_zeros()
 {
-	//очистка нулей после LU-разложения нужна тут
+	for (int i = nval - 1; i >= 0; --i)
+	{
+		if (abs(val[i]) < zero_threshold)
+		{
+			int r = get_row_by_index(i);
+			erase_one(i, r);
+		}	
+	}
 }
 
 double SparseMatrix::line(int q, double* y)
