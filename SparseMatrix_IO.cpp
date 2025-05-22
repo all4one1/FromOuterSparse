@@ -308,13 +308,17 @@ void SparseMatrix::print_compressed_matrix()
 {
 	//ofstream seq("seq.dat");
 	cout << "Sequential (compressed) format: " << endl;
+	cout << "val: ";
 	for (int i = 0; i < nval; i++)
 		cout << val[i] << " ";
 	cout << endl;
+
+	cout << "col: ";
 	for (int i = 0; i < nval; i++)
 		cout << col[i] << " ";
 	cout << endl;
 
+	cout << "row: ";
 	for (int i = 0; i < Nfull + 1; i++)
 		cout << row[i] << " ";
 	cout << endl;
@@ -338,6 +342,37 @@ void SparseMatrix::print_full_matrix()
 			cout << "Number of zero elements: " << count_zero << endl;
 	} ();
 }
+
+void SparseMatrix::add_submatrix_rightward(SparseMatrix& B, int stride_x, int stride_y)
+{
+	for (int i = 0; i < B.Nfull; i++)
+	{
+		int global_i = i + stride_y;
+		//int l1 = row[global_i];
+		int l2 = row[global_i + 1];
+
+		vecpair v = B.get_a_row(i);
+
+		for (auto& it : v.second)
+			it += stride_x;
+
+		insert_many_in_one_row(l2, global_i, v.first, v.second);
+	}
+}
+
+vecpair SparseMatrix::get_a_row(int ii)
+{
+	std::vector<int> vi;
+	std::vector<double> vd;
+
+	for (int j = row[ii]; j < row[ii + 1]; j++)
+	{
+		vi.push_back(col[j]);
+		vd.push_back(val[j]);
+	}
+	return std::make_pair(vd, vi);
+}
+
 
 
 

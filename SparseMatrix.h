@@ -7,6 +7,8 @@
 
 // format of storage:
 // Compressed Sparse Row
+using vecpair = std::pair<std::vector<double>, std::vector<int>>;
+
 struct SparseMatrix
 {
 	enum side
@@ -29,27 +31,66 @@ struct SparseMatrix
 	std::vector <int> col;
 	std::vector <int> row;
 	std::vector <double> diag;
-	std::vector <int> type;
+	std::vector <int> type; //Possibly redundant
 
 
 	SparseMatrix();
 	SparseMatrix(int n_);
 	~SparseMatrix();
 
-
-	void add_one_next(double v, int i, int t = -1);
+private:
 	void insert_one(int place_in_vector, int matrix_row, double value, int column, int t = -1);
+	void insert_many_in_one_row(int place_in_vector, int matrix_row, std::vector<double> value, std::vector<int> column);
+	vecpair get_a_row(int ii);
+	void endline(int l);
+
+public:
+	void add_one_next(double v, int i, int t = -1);
 	void erase_one(int place_in_vector, int matrix_row);
 	void add_line_with_map(std::map<int, double> elements, int current_line);
-	void endline(int l);
+	void add_submatrix_rightward(SparseMatrix& B, int stride_x = 0, int stride_y = 0);
+	
+
 
 
 	void make_sparse_2d_laplace(int nx, int ny, double a = 1);
 	void make_sparse_from_double_array(int n_, double** M);
 	void make_sparse_from_2d_vector(std::vector<std::vector<double>> M);
 	void make_sparse_from_joint(std::vector<SparseMatrix*> v);
+	void make_sparse_from_submatrix_grid(std::vector<std::vector<SparseMatrix*>> mSM)
+	{
+		//check matrices?
+		int stride = mSM[0][0]->Nfull;
 
-	double get_element(int ii, int jj);
+		int stotal = 0;
+		for (int i = 0; i < mSM.size(); ++i) {
+			for (int j = 0; j < mSM[i].size(); ++j) {
+				int s = mSM[i][j]->Nfull;
+				if (s != stride)
+				{
+					std::cout << "Error: Matrices are different" << std::endl;
+					return;
+				}
+				stotal += s * s;
+			}
+		}
+
+		if (stotal != Nfull * Nfull)
+		{
+			std::cout << "Error: Matrices have not filled the parent matrix" << std::endl;
+			return;
+		}
+
+		for (int i = 0; i < mSM.size(); ++i) {
+			for (int j = 0; j < mSM[i].size(); ++j) {
+
+				add_submatrix_rightward(*mSM[i][j], i * stride, j * stride);
+			}
+		}
+	}
+
+
+	double get_element(int ii, int jj) const;
 	int get_index(int ii, int jj);
 	int get_type(int ii, int jj);
 	void set_type(int ii, int jj, int t);
@@ -71,6 +112,7 @@ struct SparseMatrix
 		return *this;
 	};
 	double& operator()(int ii, int jj);
+	double operator()(int ii, int jj) const;
 
 	// implementaion of [][] operator
 	struct Bracket
@@ -116,5 +158,9 @@ struct SparseMatrix
 	void print_index_ij(int l);
 	void print_compressed_matrix();
 	void print_full_matrix();
+
+	
+
+
 
 };

@@ -40,8 +40,7 @@ void SparseMatrix::add_one_next(double v, int i, int t)
 	col.push_back(i);
 	nval++;
 }
-void SparseMatrix::insert_one(int place_in_vector, int matrix_row, 	
-	double value, int column, int t)
+void SparseMatrix::insert_one(int place_in_vector, int matrix_row, double value, int column, int t)
 {
 	val.insert(val.begin() + place_in_vector, value);
 	col.insert(col.begin() + place_in_vector, column);
@@ -51,6 +50,19 @@ void SparseMatrix::insert_one(int place_in_vector, int matrix_row,
 		row[i]++;
 	}
 	nval++;
+}
+
+void SparseMatrix::insert_many_in_one_row(int place_in_vector, int matrix_row, std::vector<double> value, std::vector<int> column)
+{
+	val.insert(val.begin() + place_in_vector, value.begin(), value.end());
+	col.insert(col.begin() + place_in_vector, column.begin(), column.end());
+	//type.insert(type.begin() + place_in_vector, t);
+	int n = static_cast<int>(value.size());
+	for (unsigned int i = matrix_row + 1; i < row.size(); i++)
+	{
+		row[i] = row[i] + n;
+	}
+	nval = nval + n;
 }
 
 
@@ -65,8 +77,11 @@ void SparseMatrix::add_line_with_map(std::map<int, double> elements, int current
 
 void SparseMatrix::endline(int l)
 {
-	l++;
-	row[l] = nval;
+	//l++;
+	//row[l] = nval;
+
+	for (int i = l + 1; i < nrow; i++)
+		row[i] = nval;
 }
 
 void SparseMatrix::resize(int n_)
@@ -179,6 +194,11 @@ void SparseMatrix::make_sparse_from_2d_vector(std::vector<std::vector<double>> M
 	nval = (int)val.size();
 }
 
+
+/// Matrix M =  
+///   [ A  0 ]
+///   [ 0  B ]
+///   where A, B = two square matrices, v = {A, B}
 void SparseMatrix::make_sparse_from_joint(std::vector<SparseMatrix*> v)
 {
 	int N = 0, n = 0;
@@ -213,7 +233,7 @@ void SparseMatrix::make_sparse_from_joint(std::vector<SparseMatrix*> v)
 
 
 
-double SparseMatrix::get_element(int ii, int jj)
+double SparseMatrix::get_element(int ii, int jj) const
 {
 	double v = 0;
 	for (int j = row[ii]; j < row[ii + 1]; j++)
@@ -284,7 +304,9 @@ void SparseMatrix::update(int ii, int jj, double value)
 }
 
 // it can set zero value, which is not perfect
-// perhaps, overload "=" operator is a solution
+// perhaps, a proxy object might help
+
+
 double& SparseMatrix::operator()(int ii, int jj)
 {
 	//cout << "index: " << ii << " " << jj << endl;
@@ -302,7 +324,16 @@ double& SparseMatrix::operator()(int ii, int jj)
 		cout << "l1 = " << l1 << ", l2 = " << l2 << endl;
 	#endif // DEBUG
 
-
+	/*      before
+		x . . x . . . .
+		. x . . x . . .
+		. . x . . x . .
+		. . . x . . x .
+		. . . . x . . x
+		. . . . . A . .  <- line was empty 
+		. . . . . . . .
+		. . . . . . . .
+	*/
 	if (l2 == l1)
 	{
 		#ifdef DEBUG
@@ -312,7 +343,17 @@ double& SparseMatrix::operator()(int ii, int jj)
 		return val[l1];
 	}
 
-	//before 
+
+	/*      before
+		x . . x . . . .
+		. x . . x . . .
+		. . x . . x . .
+		. . . x . . x .
+		. . . . x . . x
+		. A . . . x . .  <- A placed before  
+		. . . . . . x .
+		. . . . . . . x
+	*/
 	if (jj >= 0 && jj < col[l1])
 	{
 		#ifdef DEBUG
@@ -322,7 +363,16 @@ double& SparseMatrix::operator()(int ii, int jj)
 		return val[l1];
 	}
 
-	//after
+	/*      after
+		x . . x . . . .
+		. x . . x . A . <- A placed after  
+		. . x . . x . .
+		. . . x . . x .
+		. . . . x . . x
+		. . . . . x . .
+		. . . . . . x .
+		. . . . . . . x
+	*/
 	if (jj < Nfull && jj > col[l2 - 1])
 	{
 		#ifdef DEBUG
@@ -333,7 +383,16 @@ double& SparseMatrix::operator()(int ii, int jj)
 	}
 
 
-	//inside existing
+	/*  inside existing (updating)
+		x . . x . . . .
+		. x . . x . . .
+		. . x . . x . .
+		. . . A . . x .  <- A placed instead of x
+		. . . . x . . x
+		. . . . . x . .
+		. . . . . . x .
+		. . . . . . . x
+	*/
 	for (int j = row[ii]; j < row[ii + 1]; j++)
 	{
 		if (col[j] == jj)
@@ -346,7 +405,16 @@ double& SparseMatrix::operator()(int ii, int jj)
 	}
 
 
-	//inside non-existing
+	/* inside non-existing 
+		x . . x . . . .
+		. x . . x . . .
+		. . x . . x . .
+		. . . x A . x . <- A placed within 
+		. . . . x . . x
+		. . . . . x . .
+		. . . . . . x .
+		. . . . . . . x
+	*/
 	for (int j = row[ii]; j < row[ii + 1]; j++)
 	{
 		if (jj > col[j] && jj < col[j + 1])
@@ -363,6 +431,12 @@ double& SparseMatrix::operator()(int ii, int jj)
 	double* v = new double; 	
 	return *v;
 }
+
+double SparseMatrix::operator()(int ii, int jj) const
+{
+	return get_element(ii, jj);
+}
+
 
 
 void SparseMatrix::erase_one(int place_in_vector, int matrix_row)
