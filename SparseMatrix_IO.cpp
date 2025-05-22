@@ -83,9 +83,9 @@ void SparseMatrix::read_compressed_matrix(std::string filename)
 	getline(read, line);
 	std::stringstream ss;
 	ss << line;
-	ss >> Nfull; ss >> nval; ss >> nrow;
-
-	resize(Nfull);
+	ss >> Nfull; 	resize(Nfull);
+	ss >> nval; 
+	ss >> nrow;
 
 	//values
 	getline(read, line);

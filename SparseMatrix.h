@@ -42,14 +42,14 @@ private:
 	void insert_one(int place_in_vector, int matrix_row, double value, int column, int t = -1);
 	void insert_many_in_one_row(int place_in_vector, int matrix_row, std::vector<double> value, std::vector<int> column);
 	vecpair get_a_row(int ii);
-	void endline(int l);
+	
 
 public:
 	void add_one_next(double v, int i, int t = -1);
 	void erase_one(int place_in_vector, int matrix_row);
 	void add_line_with_map(std::map<int, double> elements, int current_line);
 	void add_submatrix_rightward(SparseMatrix& B, int stride_x = 0, int stride_y = 0);
-	
+	void endline(int l);
 
 
 
@@ -83,8 +83,7 @@ public:
 
 		for (int i = 0; i < mSM.size(); ++i) {
 			for (int j = 0; j < mSM[i].size(); ++j) {
-
-				add_submatrix_rightward(*mSM[i][j], i * stride, j * stride);
+				add_submatrix_rightward(*mSM[i][j], j * stride, i * stride);
 			}
 		}
 	}

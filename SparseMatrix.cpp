@@ -44,7 +44,7 @@ void SparseMatrix::insert_one(int place_in_vector, int matrix_row, double value,
 {
 	val.insert(val.begin() + place_in_vector, value);
 	col.insert(col.begin() + place_in_vector, column);
-	type.insert(type.begin() + place_in_vector, t);
+	//type.insert(type.begin() + place_in_vector, t);
 	for (unsigned int i = matrix_row + 1; i < row.size(); i++)
 	{
 		row[i]++;
@@ -324,7 +324,7 @@ double& SparseMatrix::operator()(int ii, int jj)
 		cout << "l1 = " << l1 << ", l2 = " << l2 << endl;
 	#endif // DEBUG
 
-	/*      before
+	/*    empty line
 		x . . x . . . .
 		. x . . x . . .
 		. . x . . x . .
@@ -383,7 +383,7 @@ double& SparseMatrix::operator()(int ii, int jj)
 	}
 
 
-	/*  inside existing (updating)
+	/*  inside existing (updating when A[i][j] = value)
 		x . . x . . . .
 		. x . . x . . .
 		. . x . . x . .
