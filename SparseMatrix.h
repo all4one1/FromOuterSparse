@@ -57,36 +57,7 @@ public:
 	void make_sparse_from_double_array(int n_, double** M);
 	void make_sparse_from_2d_vector(std::vector<std::vector<double>> M);
 	void make_sparse_from_joint(std::vector<SparseMatrix*> v);
-	void make_sparse_from_submatrix_grid(std::vector<std::vector<SparseMatrix*>> mSM)
-	{
-		//check matrices?
-		int stride = mSM[0][0]->Nfull;
-
-		int stotal = 0;
-		for (int i = 0; i < mSM.size(); ++i) {
-			for (int j = 0; j < mSM[i].size(); ++j) {
-				int s = mSM[i][j]->Nfull;
-				if (s != stride)
-				{
-					std::cout << "Error: Matrices are different" << std::endl;
-					return;
-				}
-				stotal += s * s;
-			}
-		}
-
-		if (stotal != Nfull * Nfull)
-		{
-			std::cout << "Error: Matrices have not filled the parent matrix" << std::endl;
-			return;
-		}
-
-		for (int i = 0; i < mSM.size(); ++i) {
-			for (int j = 0; j < mSM[i].size(); ++j) {
-				add_submatrix_rightward(*mSM[i][j], j * stride, i * stride);
-			}
-		}
-	}
+	void make_sparse_from_submatrix_grid(std::vector<std::vector<SparseMatrix*>> mSM);
 
 
 	double get_element(int ii, int jj) const;
