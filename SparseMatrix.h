@@ -65,6 +65,7 @@ public:
 	int get_type(int ii, int jj);
 	void set_type(int ii, int jj, int t);
 	int get_row_by_index(int l);
+	bool is_non_zero(int ii, int jj);
 
 	void update_diag();
 	double max_element_abs();

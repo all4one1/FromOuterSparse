@@ -283,6 +283,7 @@ int SparseMatrix::get_row_by_index(int l)
 	}
 	return -1;
 }
+
 int SparseMatrix::get_index(int ii, int jj)
 {
 	int id = -1;
@@ -318,7 +319,13 @@ void SparseMatrix::update_diag()
 		diag[i] = get_element(i, i);
 	}
 }
-
+bool SparseMatrix::is_non_zero(int ii, int jj)
+{
+	if (get_element(ii, jj) > zero_threshold)
+		return true;
+	else 
+		return false;
+}
 
 
 void SparseMatrix::update(int ii, int jj, double value)
