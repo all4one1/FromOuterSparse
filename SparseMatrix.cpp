@@ -321,7 +321,7 @@ void SparseMatrix::update_diag()
 }
 bool SparseMatrix::is_non_zero(int ii, int jj)
 {
-	if (get_element(ii, jj) > zero_threshold)
+	if (abs(get_element(ii, jj)) > zero_threshold)
 		return true;
 	else 
 		return false;
