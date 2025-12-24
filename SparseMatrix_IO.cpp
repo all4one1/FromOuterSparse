@@ -265,7 +265,7 @@ void SparseMatrix::print_storage()
 {
 	double S = double(val.capacity() * 8 + col.capacity() * 4 + row.capacity() * 4 + diag.capacity() * 8 + type.capacity() * 4);
 	int num = int(val.capacity());
-	cout << num << " elements, " << S / 1024 / 1024 << " MB approx. matrix memory usage" << " \n\n";
+	cout << num << " elements (with a reserved capacity), " << S / 1024 / 1024 << " MB approx. matrix memory usage" << " \n\n";
 }
 void SparseMatrix::print_index_ij(int l)
 {
